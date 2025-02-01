@@ -1,0 +1,66 @@
+name: Manual Build and Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version"
+        required: true
+        default: "1.0.0"
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Main app
+        run: npm run build
+
+      - name: Update App Version
+        env:
+          VERSION: ${{ github.event.inputs.version }}
+        run: |
+          echo "Updating VERSION to $VERSION in /dist/yuui"
+          sed -i "s/^VERSION=.*/VERSION=\"$VERSION\"/" dist/yuui
+
+      - name: Archive app dist
+        run: tar --transform 's|^|yuui/|' -czf asuswrt-merlin-yuui.tar.gz -C dist .
+
+      - name: Read Changelog (Latest Version Only)
+        id: read_changelog
+        run: |
+          echo "Extracting latest changelog entry..."
+          CHANGELOG=$(awk '/^## \[/{if (found++) exit} found {print}' CHANGELOG.md)
+          echo "changelog<<EOF" >> $GITHUB_ENV
+          echo "$CHANGELOG" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          release_name: "Release ${{ github.event.inputs.version }}"
+          draft: false
+          prerelease: false
+          body: ${{ env.changelog }}
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: asuswrt-merlin-yuui.tar.gz
+          asset_name: asuswrt-merlin-yuui.tar.gz
+          asset_content_type: application/gzip
