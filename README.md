@@ -5,7 +5,7 @@
 ![GitHub Downloads (specific asset, latest release)](https://img.shields.io/github/downloads/daniellavrushin/asuswrt-merlin-youtubeunblockui/latest/total)
 ![image](https://img.shields.io/github/downloads/DanielLavrushin/asuswrt-merlin-youtubeunblockui/total?label=total%20downloads)
 
-# YoutubeUblock UI
+# YoutubeUnblock UI
 
 ## Install
 
