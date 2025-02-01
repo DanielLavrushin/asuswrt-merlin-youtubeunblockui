@@ -1,7 +1,9 @@
 import axios from "axios";
 
 const FormAction = {
-  INSTALLED_PACKAGES: "yuui_packages_installed"
+  SERVICE_START: "yuui_service_start",
+  SERVICE_STOP: "yuui_service_stop",
+  UPDATE_YUUI: "yuui_update"
 };
 
 class Response {}
@@ -105,7 +107,7 @@ class Engine {
   }
 
   public async executeWithLoadingProgress(action: Function, windowReload = true): Promise<void> {
-    let loadingProgress = new EngineLoadingProgress(0, "Please, wait");
+    let loadingProgress = new EngineLoadingProgress(0, "Please, wait...");
     window.showLoading(null, loadingProgress);
 
     const progressPromise = this.checkLoadingProgress(loadingProgress, windowReload);

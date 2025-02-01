@@ -23,16 +23,11 @@
     <script language="JavaScript" type="text/javascript" src="/validator.js"></script>
     <script>
       var yuui = {
-        router: {
-          name: '<% nvram_get("productid"); %>',
-          cpu: JSON.parse("<%cpu_core_num();%>"),
-          firmware: '<% nvram_get("firmver"); %>',
-          language: '<% nvram_get("preferred_lang"); %>',
-          ip: '<% nvram_get("lan_ipaddr"); %>',
-          territory: '<% nvram_get("territory_code"); %>',
-          features: JSON.parse(`<% get_ui_support(); %>`),
-          wan_ip: '<% nvram_get("wan_ipaddr"); %>'
-        }
+        isRunning: parseInt('<% sysinfo("pid.youtubeUnblock"); %>') > 0,
+        name: '<% nvram_get("productid"); %>',
+        cpu: JSON.parse("<%cpu_core_num();%>"),
+        firmware: '<% nvram_get("firmver"); %>',
+        language: '<% nvram_get("preferred_lang"); %>'
       };
       let custom_settings = `<% get_custom_settings(); %>`;
 

@@ -2,7 +2,7 @@
 
 export PATH=/opt/bin:/opt/sbin:/sbin:/bin:/usr/sbin:/usr/bin
 source /usr/sbin/helper.sh
-VERSION="0.0"
+VERSION="1.0.0"
 ADDON_TAG="yuui"
 ADDON_TAG_UPPER="YUUI"
 ADDON_NAME="YoutubeUnblock UI"
@@ -32,6 +32,11 @@ printlog() {
 install() {
     printlog true "Start installing $ADDON_TITLE..." $CINFO
 
+    opkg install jq
+    opkg install curl
+    opkg install sed
+    opkg install flock
+
     mkdir -p "$DIR_WEB"
 
     package=$(define_package)
@@ -39,8 +44,8 @@ install() {
     printlog true "Detected architecture package: $package" $CINFO
     download_latest $package
 
-    if [ -f "/tmp/yutubeunblock.ipk" ]; then
-        opkg install "/tmp/yutubeunblock.ipk" || {
+    if [ -f "/tmp/yuotubeunblock.ipk" ]; then
+        opkg install "/tmp/yuotubeunblock.ipk" || {
             printlog true "Failed to install $ADDON_TAG_UPPER." $CERR
             exit 1
         }
@@ -83,17 +88,42 @@ install() {
 start() {
     printlog true "Starting $ADDON_TITLE..." $CINFO
     /opt/etc/init.d/*youtubeUnblock restart
+    printlog true "$ADDON_TITLE started." $CSUC
 }
 
 stop() {
     printlog true "Stopping $ADDON_TITLE..." $CINFO
     killall youtubeUnblock
     sleep 1
+    printlog true "$ADDON_TITLE stopped." $CSUC
 }
 
 restart() {
     stop
     start
+}
+
+startup() {
+    printlog true "Starting $ADDON_TITLE on boot..." $CINFO
+    /jffs/scripts/yuui start &
+}
+
+update() {
+    update_loading_progress "Updating $ADDON_TITLE..." 0
+    printlog true "Updating $ADDON_TITLE..." $CINFO
+
+    local url="https://github.com/daniellavrushin/asuswrt-merlin-youtubeunblockui/releases/latest/download/asuswrt-merlin-yuui.tar.gz"
+    local temp_file="/tmp/asuswrt-merlin-yuui.tar.gz"
+
+    printlog true "Downloading the latest version..."
+    update_loading_progress "Downloading the latest version..."
+    if wget -O "$temp_file" "$url"; then
+        printlog true "Download completed successfully."
+    else
+        printlog true "Failed to download the latest version. Exiting."
+        return 1
+    fi
+
 }
 
 download_latest() {
@@ -112,7 +142,7 @@ download_latest() {
         return 1
     fi
     printlog true "Downloading package from $asset_url" $CINFO
-    curl -L -o "/tmp/yutubeunblock.ipk" "$asset_url"
+    curl -L -o "/tmp/yuotubeunblock.ipk" "$asset_url"
 }
 
 define_package() {
@@ -424,6 +454,12 @@ stop)
 restart)
     restart
     ;;
+startup)
+    startup
+    ;;
+update)
+    update
+    ;;
 mount_ui)
     mount_ui
     ;;
@@ -435,6 +471,19 @@ remount_ui)
     ;;
 service_event)
     case "$2" in
+    update)
+        update
+        ;;
+    service)
+        case "$3" in
+        start)
+            start
+            ;;
+        stop)
+            stop
+            ;;
+        esac
+        ;;
     cleanloadingprogress)
         remove_loading_progress
         ;;

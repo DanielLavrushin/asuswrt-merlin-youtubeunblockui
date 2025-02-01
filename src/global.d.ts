@@ -6,9 +6,13 @@ export {};
 interface CustomSettings {
   [key: string]: string;
 }
-
+interface Server {
+  isRunning: boolean;
+}
 interface Global {
   custom_settings: CustomSettings;
+  isRunning: boolean;
+  xray_version_latest: string;
 }
 declare global {
   interface Window {
