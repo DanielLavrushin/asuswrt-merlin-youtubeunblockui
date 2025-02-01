@@ -54,12 +54,24 @@ install() {
     if [ ! -f /jffs/scripts/firewall-start ]; then
         echo "#!/bin/sh" >/jffs/scripts/firewall-start
     else
-        printlog true "Removing existing #'"$ADDON_TAG"' entries from /jffs/scripts/firewall-start."
-        sed -i '/#'"$ADDON_TAG"'/d' /jffs/scripts/firewall-start
+        printlog true "Removing existing #$ADDON_TAG entries from /jffs/scripts/firewall-start."
+        sed -i /#$ADDON_TAG/d /jffs/scripts/firewall-start
     fi
     chmod +x /jffs/scripts/firewall-start
-    echo "/jffs/scripts/'"$ADDON_TAG"' service_event startup & #'"$ADDON_TAG"'" >>/jffs/scripts/firewall-start
-    printlog true "Updated /jffs/scripts/firewall-start with '"$ADDON_TAG"' entry." $CSUC
+    echo "/jffs/scripts/$ADDON_TAG service_event startup & #$ADDON_TAG" >>/jffs/scripts/firewall-start
+    printlog true "Updated /jffs/scripts/firewall-start with $ADDON_TAG entry." $CSUC
+
+    # Add or update service-event
+    printlog true "Ensuring /jffs/scripts/service-event contains required entry."
+    if [ ! -f /jffs/scripts/service-event ]; then
+        echo "#!/bin/sh" >/jffs/scripts/service-event
+    else
+        printlog true "Removing existing #$ADDON_TAG entries from /jffs/scripts/service-event."
+        sed -i /#$ADDON_TAG/d /jffs/scripts/service-event
+    fi
+    chmod +x /jffs/scripts/service-event
+    echo "echo \"\$2\" | grep -q \"^$ADDON_TAG\" && /jffs/scripts/$ADDON_TAG service_event \$(echo \"\$2\" | cut -d'_' -f2- | tr '_' ' ') & #$ADDON_TAG" >>/jffs/scripts/service-event
+    printlog true "Updated /jffs/scripts/service-event with $ADDON_TITLE entry." $CSUC
 
     remount_ui
 
