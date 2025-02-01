@@ -1,8 +1,12 @@
 <template>
-    <div class="version"><a href="#" @click.prevent="open_update">
+    <div class="version">
+        [main credits to <a href="https://github.com/Waujito/youtubeUnblock" target="_blank">Waujito</a>]
+        <a href="#" @click.prevent="open_update">
             <span class="button_gen button_gen_small button_info" title="a more recent update is available"
                 v-if="hasUpdate">!</span>
-            XRAYUI v{{ current_version }}</a></div>
+            Youtube
+            Unblock UI v{{ current_version }}</a>
+    </div>
     <modal ref="updateModal" width="600" title="YutubeUnblock Version Log">
         <div class="modal-content">
             <p class="current-version">Current version: <strong>{{ current_version }}</strong></p>
@@ -49,7 +53,7 @@ export default defineComponent({
         const hasUpdate = ref(false);
         const changelog = ref<string>("");
         setTimeout(async () => {
-            const gh_releases_url = "https://api.github.com/repos/daniellavrushin/asuswrt-merlin-xrayui/releases";
+            const gh_releases_url = "https://api.github.com/repos/daniellavrushin/asuswrt-merlin-youtubeunblockui/releases";
 
             const response = await axios.get(gh_releases_url);
 
@@ -58,7 +62,7 @@ export default defineComponent({
                 hasUpdate.value = vCompare(latest_version.value, current_version.value) === 1;
                 if (hasUpdate.value === true) {
 
-                    window.yuui.xray_version_latest = latest_version.value;
+                    window.yuui.version_latest = latest_version.value;
                 }
 
                 changelog.value = md.render(response.data[0].body);
@@ -71,7 +75,6 @@ export default defineComponent({
         }
 
         const update = async () => {
-            alert();
             await engine.executeWithLoadingProgress(async () => {
                 await engine.submit(FormAction.UPDATE_YUUI);
             });
@@ -91,17 +94,18 @@ export default defineComponent({
 </script>
 <style scoped>
 .version {
+    position: absolute;
     padding-top: 10px;
+    bottom: 30px;
+    right: 485px;
+    font-size: 10px;
 }
 
 .version a {
     text-decoration: underline;
-    font-size: 10px;
     color: #FFCC00;
     font-weight: bold;
-    position: absolute;
-    bottom: 0;
-    right: 5px;
+
 }
 
 .textarea-wrapper .changelog {

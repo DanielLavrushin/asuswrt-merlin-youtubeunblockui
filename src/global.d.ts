@@ -12,7 +12,7 @@ interface Server {
 interface Global {
   custom_settings: CustomSettings;
   isRunning: boolean;
-  xray_version_latest: string;
+  version_latest: string;
 }
 declare global {
   interface Window {

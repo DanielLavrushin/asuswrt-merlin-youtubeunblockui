@@ -1,5 +1,5 @@
 <template>
-  <form method="post" name="form" id="ruleForm" action="/start_apply.htm" target="hidden_frame">
+  <form method="post" name="form" action="/start_apply.htm" target="hidden_frame">
     <input type="hidden" name="current_page" :value="page" />
     <input type="hidden" name="next_page" :value="page" />
     <input type="hidden" name="group_id" value="" />
@@ -48,6 +48,7 @@
         </tr>
       </tbody>
     </table>
+    <version></version>
   </form>
 </template>
 <script lang="ts">
@@ -57,6 +58,7 @@ import MainMenu from "./asus/MainMenu.vue";
 import TabMenu from "./asus/TabMenu.vue";
 import SubMenu from "./asus/SubMenu.vue";
 
+import Version from "./Version.vue";
 import Control from "./Control.vue";
 
 export default defineComponent({
@@ -66,16 +68,21 @@ export default defineComponent({
     MainMenu,
     SubMenu,
     Control,
+    Version,
+
   },
 
 
   setup() {
-    const version = "1.0.0";
     return {
-      version,
+      version: window.yuui.custom_settings.yuui_version,
       page: window.location.pathname.substring(1),
     };
   }
 });
 </script>
-<style scoped></style>
+<style scoped>
+form {
+  position: relative
+}
+</style>

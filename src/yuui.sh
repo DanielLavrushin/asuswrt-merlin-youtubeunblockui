@@ -36,6 +36,8 @@ install() {
     opkg install sed
     opkg install flock
 
+    am_settings_set yuui_version $VERSION
+
     mkdir -p "$DIR_WEB"
 
     package=$(define_package)
