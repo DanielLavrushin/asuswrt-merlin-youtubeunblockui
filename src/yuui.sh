@@ -13,8 +13,7 @@ DIR_WEB="/www/user/$ADDON_TAG"
 DIR_SHARE="/opt/share/$ADDON_TAG"
 DIR_JFFS_ADDONS="/jffs/addons/$ADDON_TAG"
 
-UI_RESPONSE_FILE="/tmp/"$ADDON_TAG"_response.json"
-
+UI_RESPONSE_FILE="/tmp/${ADDON_TAG}_response.json"
 # Color Codes
 CERR='\033[0;31m'
 CSUC='\033[0;32m'
@@ -123,7 +122,7 @@ update() {
         printlog true "Failed to download the latest version. Exiting."
         return 1
     fi
-
+    update_loading_progress
 }
 
 download_latest() {
@@ -255,6 +254,7 @@ mount_ui() {
     if [ ! -d "$DIR_SHARE/data" ]; then
         mkdir -p "$DIR_SHARE/data"
     fi
+    ensure_ui_response_file
 
     ln -s -f /jffs/addons/$ADDON_TAG/index.asp /www/user/$USER_PAGE
     ln -s -f /jffs/addons/$ADDON_TAG/app.js $DIR_WEB/app.js

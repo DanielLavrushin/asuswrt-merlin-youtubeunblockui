@@ -71,6 +71,7 @@ export default defineComponent({
         }
 
         const update = async () => {
+            alert();
             await engine.executeWithLoadingProgress(async () => {
                 await engine.submit(FormAction.UPDATE_YUUI);
             });
