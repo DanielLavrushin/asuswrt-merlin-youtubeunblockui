@@ -1,3 +1,10 @@
+![GitHub Release](https://img.shields.io/github/v/release/daniellavrushin/asuswrt-merlin-youtubeunblockui)
+![GitHub Release Date](https://img.shields.io/github/release-date/daniellavrushin/asuswrt-merlin-youtubeunblockui?logoColor=violet)
+![GitHub commits since latest release](https://img.shields.io/github/commits-since/daniellavrushin/asuswrt-merlin-youtubeunblockui/latest)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/5afa683e2930418a9b13efac6537aad8)](https://app.codacy.com/gh/DanielLavrushin/asuswrt-merlin-?logoColor=violet/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+![GitHub Downloads (specific asset, latest release)](https://img.shields.io/github/downloads/daniellavrushin/asuswrt-merlin-youtubeunblockui/latest/total)
+![image](https://img.shields.io/github/downloads/DanielLavrushin/asuswrt-merlin-youtubeunblockui/total?label=total%20downloads)
+
 # YoutubeUblock UI
 
 ## Install
