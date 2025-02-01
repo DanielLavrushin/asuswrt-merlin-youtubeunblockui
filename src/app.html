@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!--page:yuui-->
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <meta http-equiv="Expires" content="-1" />
+    <link rel="shortcut icon" href="images/favicon.png" />
+    <link rel="icon" href="images/favicon.png" />
+    <title>Youtube Unblock</title>
+    <link rel="stylesheet" type="text/css" href="index_style.css" />
+    <link rel="stylesheet" type="text/css" href="form_style.css" />
+    <link rel="stylesheet" type="text/css" href="/js/table/table.css" />
+
+    <script language="JavaScript" type="text/javascript" src="/js/jquery.js"></script>
+    <script language="JavaScript" type="text/javascript" src="/js/httpApi.js"></script>
+    <script language="JavaScript" type="text/javascript" src="/state.js"></script>
+    <script language="JavaScript" type="text/javascript" src="/general.js"></script>
+    <script language="JavaScript" type="text/javascript" src="/popup.js"></script>
+    <script language="JavaScript" type="text/javascript" src="/help.js"></script>
+    <script language="JavaScript" type="text/javascript" src="/validator.js"></script>
+    <script>
+      var yuui = {
+        router: {
+          name: '<% nvram_get("productid"); %>',
+          cpu: JSON.parse("<%cpu_core_num();%>"),
+          firmware: '<% nvram_get("firmver"); %>',
+          language: '<% nvram_get("preferred_lang"); %>',
+          ip: '<% nvram_get("lan_ipaddr"); %>',
+          territory: '<% nvram_get("territory_code"); %>',
+          features: JSON.parse(`<% get_ui_support(); %>`),
+          wan_ip: '<% nvram_get("wan_ipaddr"); %>'
+        }
+      };
+      let custom_settings = `<% get_custom_settings(); %>`;
+
+      try {
+        yuui.custom_settings = JSON.parse(custom_settings);
+      } catch (e) {
+        if (custom_settings.indexOf("yuui_payload")) {
+          console.error("Invalid custom settings: yuui_payload detected. Please  run '/jffs/scripts/yuui fixme'. This is unexpected, please report.");
+        }
+      }
+    </script>
+  </head>
+
+  <body>
+    <div id="yuui-app"></div>
+    <div id="yuui-modals"></div>
+    <script src="/ext/yuui/app.js"></script>
+  </body>
+</html>

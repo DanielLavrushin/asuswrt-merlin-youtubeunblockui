@@ -1,0 +1,11 @@
+www/
+wwwext/
+custom_settings.txt
+node_modules/
+
+.env
+
+addons/*
+scripts/*
+dist/
+*.tar.gz
