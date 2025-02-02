@@ -1,6 +1,6 @@
 <template>
     <div class="version">
-        [main credits to <a href="https://github.com/Waujito/youtubeUnblock" target="_blank">Waujito</a>]
+        [YoutubeUnblock by <a href="https://github.com/Waujito/youtubeUnblock" target="_blank">Waujito</a>]
         <a href="#" @click.prevent="open_update">
             <span class="button_gen button_gen_small button_info" title="a more recent update is available"
                 v-if="hasUpdate">!</span>
@@ -94,11 +94,9 @@ export default defineComponent({
 </script>
 <style scoped>
 .version {
-    position: absolute;
-    padding-top: 10px;
-    bottom: 30px;
-    right: 485px;
+    float: right;
     font-size: 10px;
+    margin-right: 25px;
 }
 
 .version a {

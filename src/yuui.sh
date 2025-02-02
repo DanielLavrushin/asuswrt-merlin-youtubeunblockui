@@ -55,6 +55,19 @@ install() {
         exit 1
     fi
 
+    # Add or update post-mount
+    printlog true "Ensuring /jffs/scripts/post-mount contains required entry."
+    mkdir -p /jffs/scripts
+    if [ ! -f /jffs/scripts/post-mount ]; then
+        echo "#!/bin/sh" >/jffs/scripts/post-mount
+    else
+        printlog true "Removing existing #$ADDON_TAG entries from /jffs/scripts/post-mount."
+        sed -i /#$ADDON_TAG/d /jffs/scripts/post-mount
+    fi
+    chmod +x /jffs/scripts/post-mount
+    echo "/jffs/scripts/$ADDON_TAG remount_ui"' "$@" & #'"$ADDON_TAG" >>/jffs/scripts/post-mount
+    printlog true "Updated /jffs/scripts/post-mount with $ADDON_TAG entry." $CSUC
+
     # Add or update firewall-start
     printlog true "Ensuring /jffs/scripts/firewall-start contains required entry."
     if [ ! -f /jffs/scripts/firewall-start ]; then
@@ -64,7 +77,7 @@ install() {
         sed -i /#$ADDON_TAG/d /jffs/scripts/firewall-start
     fi
     chmod +x /jffs/scripts/firewall-start
-    echo "/jffs/scripts/$ADDON_TAG service_event startup & #$ADDON_TAG" >>/jffs/scripts/firewall-start
+    echo "/jffs/scripts/$ADDON_TAG startup & #$ADDON_TAG" >>/jffs/scripts/firewall-start
     printlog true "Updated /jffs/scripts/firewall-start with $ADDON_TAG entry." $CSUC
 
     # Add or update service-event
@@ -84,6 +97,48 @@ install() {
     restart
 
     printlog true "$ADDON_TITLE installed successfully." $CSUC
+}
+
+uninstall() {
+    printlog true "Uninstalling $ADDON_TITLE..." $CINFO
+
+    rm -rf /www/user/$ADDON_TAG /jffs/addons/$ADDON_TAG /tmp/$ADDON_TAG*.json
+
+    # clean up services-start
+    printlog true "Removing existing #$ADDON_TAG entries from /jffs/scripts/services-start."
+    sed -i /#$ADDON_TAG/d /jffs/scripts/services-start
+
+    # clean up nat-start
+    printlog true "Removing existing #$ADDON_TAG entries from /jffs/scripts/nat-start."
+    sed -i /#$ADDON_TAG/d /jffs/scripts/nat-start
+
+    # clean up post-mount
+    printlog true "Removing existing #$ADDON_TAG entries from /jffs/scripts/post-mount."
+    sed -i /#$ADDON_TAG/d /jffs/scripts/post-mount
+
+    # clean up service-event
+    printlog true "Removing existing #$ADDON_TAG entries from /jffs/scripts/service-event."
+    sed -i /#$ADDON_TAG/d /jffs/scripts/service-event
+
+    # clean up firewall-start
+    printlog true "Removing existing #$ADDON_TAG entries from /jffs/scripts/firewall-start."
+    sed -i /#$ADDON_TAG/d /jffs/scripts/firewall-start
+
+    printlog true "Unmounting $ADDON_TITLE..." $CINFO
+    unmount_ui
+
+    if [ -f "$PIDFILE" ]; then
+        printlog true "Stopping $ADDON_TITLE service..."
+        stop
+        rm -f $PIDFILE
+        printlog true "$ADDON_TITLE service stopped." $CSUC
+    else
+        printlog true "$ADDON_TITLE service is not running." $CWARN
+    fi
+
+    rm -f /jffs/scripts/$ADDON_TAG
+
+    opkg remove youtubeUnblockEntware --force-remove
 }
 
 start() {
@@ -106,7 +161,7 @@ restart() {
 
 startup() {
     printlog true "Starting $ADDON_TITLE on boot..." $CINFO
-    /jffs/scripts/yuui start &
+    (sleep 60 && /jffs/scripts/yuui start) &
 }
 
 update() {
@@ -124,7 +179,10 @@ update() {
         printlog true "Failed to download the latest version. Exiting."
         return 1
     fi
-    update_loading_progress
+
+    install
+
+    update_loading_progress "$ADDON_TITLE Update successful." 100
 }
 
 download_latest() {
@@ -181,11 +239,6 @@ define_package() {
     esac
 
     echo "$pattern"
-}
-
-uninstall() {
-    printlog true "Uninstalling $ADDON_TAG_UPPER..." $CINFO
-
 }
 
 get_webui_page() {
@@ -270,7 +323,7 @@ mount_ui() {
         mount -o bind /tmp/menuTree.js /www/require/modules/menuTree.js
     fi
 
-    sed -i '/index: "menu_VPN"/,/index:/ {
+    sed -i '/index: "menu_Firewall"/,/index:/ {
   /url:\s*"NULL",\s*tabName:\s*"__INHERIT__"/ i \
     { url: "'"$USER_PAGE"'", tabName: "'"$ADDON_TITLE"'" },
 }' /tmp/menuTree.js
@@ -307,7 +360,7 @@ unmount_ui() {
     if [ ! -f /tmp/menuTree.js ]; then
         printlog true "menuTree.js not found, skipping unmount." $CWARN
     else
-        printlog true "Removing any X-RAY menu entry from menuTree.js."
+        printlog true "Removing any $ADDON_TITLE menu entry from menuTree.js."
 
         grep -v "tabName: \"$ADDON_TITLE\"" /tmp/menuTree.js >/tmp/menuTree_temp.js
         mv /tmp/menuTree_temp.js /tmp/menuTree.js
@@ -324,8 +377,15 @@ unmount_ui() {
 }
 
 remount_ui() {
+    LOCKFILE=/tmp/addonwebui.lock
+    FD=386
+    eval exec "$FD>$LOCKFILE"
+    flock -x "$FD"
+
     unmount_ui
     mount_ui
+
+    flock -u "$FD"
 }
 
 am_settings_del() {

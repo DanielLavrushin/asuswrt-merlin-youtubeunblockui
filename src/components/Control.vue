@@ -1,7 +1,9 @@
 <template>
-    <div class="control" @click.prevent="toggle_yuui">
-        <img :src="yuui_img" alt="yuui" />
-    </div>
+    <section>
+        <div class="control" @click.prevent="toggle_yuui" title="Click to unblock Youtube">
+            <img :src="yuui_img" alt="yuui" />
+        </div>
+    </section>
 </template>
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
@@ -27,10 +29,16 @@ export default defineComponent({
 </script>
 
 <style scoped>
+section {
+    background-color: #424E55;
+    padding: 25px;
+    margin: 25px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
 .control {
     cursor: pointer;
     text-align: center;
-    margin: 10px 0 10px 5px;
 }
 
 .control img {

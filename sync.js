@@ -22,12 +22,12 @@ async function uploadFiles() {
     await client.ensureDir("/scripts");
     await client.ensureDir("/");
 
+    await client.uploadFrom("dist/yuui", "/scripts/yuui");
+    await client.send("SITE CHMOD 755 /scripts/yuui");
+
     await client.uploadFrom("dist/index.asp", "/addons/yuui/index.asp");
     await client.uploadFrom("dist/app.js", "/addons/yuui/app.js");
     await client.uploadFromDir("dist/assets", "/addons/yuui/assets");
-    await client.uploadFrom("dist/yuui", "/scripts/yuui");
-
-    await client.send("SITE CHMOD 755 /scripts/yuui");
 
     console.log("Files uploaded successfully");
   } catch (err) {

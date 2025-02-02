@@ -35,6 +35,7 @@
                               <div id="formfontdesc" class="formfontdesc"></div>
                               <div style="margin: 10px 0 10px 5px" class="splitLine"></div>
                               <control></control>
+                              <version></version>
                             </div>
                           </td>
                         </tr>
@@ -48,7 +49,6 @@
         </tr>
       </tbody>
     </table>
-    <version></version>
   </form>
 </template>
 <script lang="ts">
@@ -81,8 +81,4 @@ export default defineComponent({
   }
 });
 </script>
-<style scoped>
-form {
-  position: relative
-}
-</style>
+<style scoped></style>
