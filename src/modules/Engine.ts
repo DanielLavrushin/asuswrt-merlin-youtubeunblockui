@@ -51,7 +51,7 @@ class Engine {
         const payloadString = JSON.stringify(payload);
         const chunks = this.splitPayload(payloadString, chunkSize);
         chunks.forEach((chunk: string, idx) => {
-          window.yuui.custom_settings[`eui_payload${idx}`] = chunk;
+          window.yuui.custom_settings[`yuui_payload${idx}`] = chunk;
         });
 
         const customSettings = JSON.stringify(window.yuui.custom_settings);
