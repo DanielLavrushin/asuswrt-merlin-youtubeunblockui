@@ -37,9 +37,11 @@ function inlineShellImports(scriptPath, visited = new Set(), isRoot = true) {
   for (const line of lines) {
     const match = line.match(/^import\s+(.+)$/);
     if (match) {
-      const importedFile = match[1].trim();
-      const importAbsolutePath = resolve(dirOfScript, importedFile);
-      output += inlineShellImports(importAbsolutePath, visited, false);
+      if (match.length > 1) {
+        const importedFile = match[1].trim();
+        const importAbsolutePath = resolve(dirOfScript, importedFile);
+        output += inlineShellImports(importAbsolutePath, visited, false);
+      }
     } else {
       if (!isRoot && line.match(/^#/)) {
         continue;
