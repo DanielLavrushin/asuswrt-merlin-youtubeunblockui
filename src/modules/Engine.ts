@@ -1,17 +1,16 @@
 import axios from "axios";
 
-const FormAction = {
+export const FormAction = {
   SERVICE_START: "yuui_service_start",
   SERVICE_STOP: "yuui_service_stop",
   UPDATE_YUUI: "yuui_update"
 };
 
-class Response {}
-class EngineResponse {
+export class EngineResponse {
   public response?: Response;
   public loading?: EngineLoadingProgress;
 }
-class EngineLoadingProgress {
+export class EngineLoadingProgress {
   public progress = 0;
   public message = "";
 
@@ -25,7 +24,7 @@ class EngineLoadingProgress {
   }
 }
 
-class Engine {
+export class Engine {
   public submit(action: string, payload: object | string | number | null | undefined = undefined, delay = 0): Promise<void> {
     return new Promise((resolve) => {
       const iframeName = "hidden_frame_" + Math.random().toString(36).substring(2, 9);
@@ -106,7 +105,7 @@ class Engine {
     return responseConfig;
   }
 
-  public async executeWithLoadingProgress(action: Function, windowReload = true): Promise<void> {
+  async executeWithLoadingProgress(action: () => Promise<void>, windowReload = true): Promise<void> {
     let loadingProgress = new EngineLoadingProgress(0, "Please, wait...");
     window.showLoading(null, loadingProgress);
 
@@ -130,6 +129,7 @@ class Engine {
             if (windowReload) {
               window.location.reload();
             }
+            return resolve();
           }
         } catch (error) {
           clearInterval(checkProgressInterval);
@@ -143,4 +143,3 @@ class Engine {
 
 let engine = new Engine();
 export default engine;
-export { FormAction, Response, EngineResponse, EngineLoadingProgress };

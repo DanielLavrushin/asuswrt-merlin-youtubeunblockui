@@ -49,7 +49,7 @@ mount_ui() {
 }' /tmp/menuTree.js
 
     umount /www/require/modules/menuTree.js && mount -o bind /tmp/menuTree.js /www/require/modules/menuTree.js
-
+    load_ui_response
     clear_lock
 
     printlog true "$ADDON_TITLE mounted successfully as $ADDON_USER_PAGE" $CSUC

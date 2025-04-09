@@ -3,14 +3,11 @@ import { EngineLoadingProgress } from "./modules/Engine";
 
 export {};
 
-interface CustomSettings {
-  [key: string]: string;
-}
 interface Server {
   isRunning: boolean;
 }
 interface Global {
-  custom_settings: CustomSettings;
+  custom_settings: Record<string, string>;
   isRunning: boolean;
   version_latest: string;
 }
