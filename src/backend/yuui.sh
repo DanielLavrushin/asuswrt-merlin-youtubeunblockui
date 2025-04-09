@@ -35,7 +35,7 @@ startup)
     startup
     ;;
 update)
-    update
+    update $2
     ;;
 mount_ui)
     mount_ui

@@ -1,6 +1,6 @@
 # YOUTUBEUNBLOCKUI Changelog
 
-## [1.2.0] - 2025-04-09
+## [1.3.0] - 2025-04-09
 
 > _Important: Please clear your browser cache (e.g.**ctrl+f5**) to ensure that outdated files are updated._
 
