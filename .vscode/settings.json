@@ -13,5 +13,12 @@
   },
   "[properties]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "explorer.fileNesting.expand": true,
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "vite.config.ts": "vite.*.js",
+    "*.vue": "${capture}.*",
+    "global.d.ts": "*.d.ts"
   }
 }
