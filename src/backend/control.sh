@@ -5,7 +5,7 @@ start() {
     printlog true "Starting $ADDON_TITLE..." $CINFO
     /opt/etc/init.d/*youtubeUnblock restart
     am_settings_set yuui_startup y
-    load_ui_respon
+    load_ui_response
     printlog true "$ADDON_TITLE started." $CSUC
 }
 
