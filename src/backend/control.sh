@@ -11,7 +11,7 @@ start() {
 
 stop() {
     printlog true "Stopping $ADDON_TITLE..." $CINFO
-    killall youtubeUnblock
+    /opt/etc/init.d/*youtubeUnblock stop
     am_settings_set yuui_startup n
     sleep 1
     printlog true "$ADDON_TITLE stopped." $CSUC
